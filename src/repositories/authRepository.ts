@@ -1,8 +1,8 @@
-import type { Role, AccountRow } from "../models/user.ts";
+import type { Role, AccountRow, AccountResponse } from "../models/user.ts";
 import { pool } from "../config/db.ts";
 
 export class AuthRepository {
-    async getUserAccount(email: string): Promise<AccountRow | null> {
+    async getUserAccount(email: string): Promise<AccountResponse | null> {
         let role: Role = "STUDENT";
         let account: AccountRow | undefined = (
             await pool.query<AccountRow>(
@@ -21,6 +21,13 @@ export class AuthRepository {
                 )
             ).rows[0];
         }
-        return account || null;
+        if (!account) {
+            return null;
+        }
+        const accountResponse: AccountResponse = {
+            ...account,
+            role: role
+        };
+        return accountResponse;
     }
 }

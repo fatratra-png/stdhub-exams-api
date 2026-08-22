@@ -30,3 +30,11 @@ export interface AccountRow {
     passwordHash: string;
     isActive: boolean;
 }
+
+export interface AccountResponse {
+    id: string;
+    email: string;
+    passwordHash: string;
+    isActive: boolean;
+    role: Role;
+}
