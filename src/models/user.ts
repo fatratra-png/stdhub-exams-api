@@ -23,3 +23,10 @@ export interface AuthUser {
     id: string;
     role: Role;
 }
+
+export interface AccountRow {
+    id: string;
+    email: string;
+    passwordHash: string;
+    isActive: boolean;
+}

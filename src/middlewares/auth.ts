@@ -1,11 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { HttpError } from "../errors.ts";
-
-export interface AuthUser {
-  id: string;
-  role: "ADMIN" | "STUDENT";
-}
+import { type AuthUser } from "../models/user.ts";
+import { JwtSecurity } from "../security/jwtSecurity.ts";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -30,10 +26,7 @@ export const requireAuth = (
     return;
   }
   try {
-    const payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET ?? "dev-secret",
-    ) as AuthUser;
+    const payload = JwtSecurity.verifyToken(token);
     req.user = { id: payload.id, role: payload.role };
     next();
   } catch {
