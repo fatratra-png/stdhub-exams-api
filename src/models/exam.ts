@@ -1,7 +1,8 @@
 export interface Exam {
-  id: Number;
-  ueId: Number;
+  id: number;
+  courseId: number;
   title: string;
+  description: string | null;
   startDate: Date;
   endDate: Date;
   createdAt: Date;

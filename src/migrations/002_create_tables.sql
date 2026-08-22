@@ -1,42 +1,39 @@
+CREATE SEQUENCE IF NOT EXISTS admin_id_seq START WITH 1;
+
 CREATE TABLE IF NOT EXISTS admins(
-      id VARCHAR(20) PRIMARY KEY,
-      email VARCHAR(30) UNIQUE NOT NULL,
+      id VARCHAR(20) PRIMARY KEY DEFAULT 'ADM' || LPAD(nextval('admin_id_seq')::text, 5, '0'),
+      email VARCHAR(100) UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+CREATE SEQUENCE IF NOT EXISTS student_id_seq START WITH 26001;
 
 CREATE TABLE IF NOT EXISTS students(
-      id VARCHAR(20) PRIMARY KEY,
+      id VARCHAR(20) PRIMARY KEY DEFAULT 'STD' || nextval('student_id_seq'),
       first_name VARCHAR(100) NOT NULL,
       last_name VARCHAR(100),
-      email VARCHAR(30) UNIQUE NOT NULL,
+      email VARCHAR(100) UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       is_active BOOLEAN NOT NULL DEFAULT TRUE,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
-
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS student_id_counter(
-      id INT PRIMARY KEY DEFAULT 1,
-      counter INT NOT NULL DEFAULT 0
-);
-
-INSERT INTO student_id_counter(id,counter) VALUES (1,0) ON CONFLICT (id) DO NOTHING;
-
-CREATE TABLE IF NOT EXISTS ues(
+CREATE TABLE IF NOT EXISTS courses(
       id SERIAL PRIMARY KEY,
       code VARCHAR(20) UNIQUE NOT NULL,
       name VARCHAR(100) NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS exams(
       id SERIAL PRIMARY KEY,
-      ue_id INT NOT NULL REFERENCES ues(id) ON DELETE RESTRICT,
-      title VARCHAR(100) NOT NULL,
-      start_date TIMESTAMP NOT NULL,
-      end_date TIMESTAMP NOT NULL,
-      created_at TIMESTAMP NOT NULL DEFAULT NOW()
+      course_id INT NOT NULL REFERENCES courses(id) ON DELETE RESTRICT,
+      title VARCHAR(200) NOT NULL,
+      description TEXT,
+      start_date TIMESTAMPTZ NOT NULL,
+      end_date TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS questions(
@@ -58,8 +55,8 @@ CREATE TABLE IF NOT EXISTS attempts(
       id SERIAL PRIMARY KEY,
       student_id VARCHAR(20) NOT NULL REFERENCES students(id) ON DELETE RESTRICT,
       exam_id INT NOT NULL REFERENCES exams(id) ON DELETE CASCADE,
-      started_at TIMESTAMP NOT NULL DEFAULT NOW(),
-      submitted_at TIMESTAMP,
+      started_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      submitted_at TIMESTAMPTZ,
       score INT,
       UNIQUE (student_id,exam_id)
 );
@@ -72,7 +69,7 @@ CREATE TABLE IF NOT EXISTS answers(
       UNIQUE (attempt_id,question_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_exams_ue ON exams(ue_id);
+CREATE INDEX IF NOT EXISTS idx_exams_course ON exams(course_id);
 CREATE INDEX IF NOT EXISTS idx_questions_exam ON questions(exam_id);
 CREATE INDEX IF NOT EXISTS idx_choices_question ON choices(question_id);
 CREATE INDEX IF NOT EXISTS idx_attempts_student ON attempts(student_id);
