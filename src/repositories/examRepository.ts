@@ -1,5 +1,5 @@
 import { pool } from "../config/db.ts";
-import type { ExamRow, RawExamRow, ExamDetailChoiceRow, ExamDetailQuestionRow, ExamResultRow } from "../models/exam.ts";
+import type { ExamRow, RawExamRow, ExamInput, ExamDetailQuestionRow, ExamResultRow } from "../models/exam.ts";
 
 const EXAM_SELECT = `
     SELECT e.id,
@@ -18,14 +18,6 @@ const toExamRow = (row: RawExamRow): ExamRow => ({
     questionCount: Number(row.questionCount),
     attemptCount: Number(row.attemptCount),
 });
-
-export interface ExamInput {
-    courseId: number;
-    title: string;
-    description: string | null;
-    startDate: Date;
-    endDate: Date;
-}
 
 export class ExamRepository {
     async findAll(courseId?: number): Promise<ExamRow[]> {

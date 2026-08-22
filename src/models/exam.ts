@@ -75,3 +75,23 @@ export interface ExamDetailQuestionRow {
   score: number;
   answers: ExamDetailChoiceRow[];
 }
+
+export interface ExamInput {
+    courseId: number;
+    title: string;
+    description: string | null;
+    startDate: Date;
+    endDate: Date;
+}
+
+export interface ExamDetail extends ExamRow {
+  questions: ExamDetailQuestionRow[];
+}
+
+export interface ExamResultsSummary {
+  examId: number;
+  examTitle: string;
+  average: number;
+  attemptsCount: number;
+  results: ExamResultRow[];
+}
