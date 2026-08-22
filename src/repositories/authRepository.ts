@@ -6,7 +6,7 @@ export class AuthRepository {
         let role: Role = "STUDENT";
         let account: AccountRow | undefined = (
             await pool.query<AccountRow>(
-                "SELECT id, email, password_hash AS \"passwordHash\", NULL::boolean AS \"isActive\" FROM admins WHERE email = $1",
+                "SELECT id, email, password_hash AS \"passwordHash\", true::boolean AS \"isActive\" FROM admins WHERE email = $1",
                 [email],
             ) 
         ).rows[0];
