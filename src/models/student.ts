@@ -8,4 +8,4 @@ export interface Student {
   createdAt: Date;
 }
 
-export type publicStudent = Omit<Student, "passwordHash">;
+export type PublicStudent = Omit<Student, "passwordHash">;
