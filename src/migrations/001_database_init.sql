@@ -1,0 +1,1 @@
+CREATE DATABASE stdhub_exams_db;
