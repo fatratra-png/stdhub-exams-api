@@ -5,3 +5,10 @@ export interface Course {
   description: string;
   createdAt: Date;
 }
+
+export interface CourseRow {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+}
