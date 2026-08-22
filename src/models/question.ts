@@ -3,26 +3,26 @@ import type { Choice, PublicChoice } from "./choice.ts";
 export interface Question {
     id: number;
     examId: number;
-    statement: string;
+    text: string;
     points: number;
     position: number;
 }
 
-export interface QuestionWithChoices extends Choice {
+export interface QuestionWithChoices extends Question {
     choices: Choice[];
 }
 
 export interface PublicQuestion {
     id: number;
-    statement: string;
+    text: string;
     points: number;
     choices: PublicChoice[];
 }
 
 export interface QuestionCorrection {
     questionId: number;
-    statement: string;
-    points: number;
+    text: string;
+    score: number;
     choices: PublicChoice[];
     selectedChoiceId: number | null;
     correctChoiceId: number;
