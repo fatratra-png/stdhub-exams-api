@@ -1,5 +1,5 @@
-export interface Ue {
-  id: Number;
+export interface Course {
+  id: number;
   code: string;
   name: string;
   createdAt: Date;

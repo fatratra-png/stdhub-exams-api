@@ -1,4 +1,4 @@
-INSERT INTO ues(code,name) VALUES
+INSERT INTO courses(code,name) VALUES
 ('WEB1','Interfaces web'),
 ('WEB2','Applications web globalement connectees'),
 ('PROG1','Algorithmiques'),
