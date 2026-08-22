@@ -11,6 +11,7 @@ export class AuthController {
             const {email, password} = req.body;
             if (!email || !password) {
                 res.status(400).json({message: 'Champs manquant'});
+                return;
             }
             const result = await authService.login(email, password);
             res.status(200).json(result);

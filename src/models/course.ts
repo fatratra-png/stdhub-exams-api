@@ -12,3 +12,9 @@ export interface CourseRow {
   name: string;
   description: string;
 }
+
+export interface CoursePayload {
+  code: string;
+  name: string;
+  description: string | null;
+}
