@@ -1,30 +1,53 @@
-import type { Choice, PublicChoice } from "./choice.ts";
+import type { Choice, ChoiceInput, PublicChoiceRow } from "./choice.ts";
 
 export interface Question {
     id: number;
     examId: number;
-    statement: string;
+    text: string;
     points: number;
     position: number;
 }
 
-export interface QuestionWithChoices extends Choice {
+export interface QuestionWithChoices extends Question {
     choices: Choice[];
 }
 
-export interface PublicQuestion {
+export interface PublicQuestionRow {
     id: number;
-    statement: string;
-    points: number;
-    choices: PublicChoice[];
+    text: string;
+    score: number;
+    choices: PublicChoiceRow[];
 }
 
-export interface QuestionCorrection {
+export interface CorrectionRow {
     questionId: number;
-    statement: string;
-    points: number;
-    choices: PublicChoice[];
+    text: string;
+    score: number;
+    choices: PublicChoiceRow[];
     selectedChoiceId: number | null;
     correctChoiceId: number;
-    isCorrect: boolean;
+}
+export interface QuestionRow {
+  id: number;
+  text: string;
+  score: number;
+}
+
+export interface QuestionWithExam {
+    question: QuestionRow;
+    examId: number;
+    position: number;
+}
+
+export interface QuestionWithChoicesRow {
+    id: number;
+    text: string;
+    score: number;
+    choices: Choice[];
+}
+
+export interface QuestionInput {
+    text: string;
+    score: number;
+    choices: ChoiceInput[];
 }

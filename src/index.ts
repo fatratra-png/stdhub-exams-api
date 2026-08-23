@@ -3,12 +3,12 @@ import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { pool, testConnection } from "./config/db.ts";
 import { HttpError } from "./errors.ts";
-import { authRouter } from "./routes/authRoutes.ts";
-import { studentsRouter } from "./routes/studentsRoutes.ts";
-import { coursesRouter } from "./routes/coursesRoutes.ts";
-import { examsRouter } from "./routes/examsRoutes.ts";
-import { questionsRouter } from "./routes/questionsRoutes.ts";
-import { myRouter } from "./routes/myRoutes.ts";
+import { authRouter } from "./routes/authRoute.ts";
+import { studentsRouter } from "./routes/studentRoute.ts";
+import { coursesRouter } from "./routes/courseRoute.ts";
+import { examsRouter } from "./routes/examRoute.ts";
+import { questionsRouter } from "./routes/questionRoute.ts";
+import { myRouter } from "./routes/studentExamRoute.ts";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
