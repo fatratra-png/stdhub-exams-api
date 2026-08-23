@@ -104,7 +104,7 @@ paths:
                 $ref: "#/components/schemas/ErrorResponse"
   /api/students/{id}:
     parameters:
-      - $ref: "#/components/parameters/IdParam"
+      - $ref: "#/components/parameters/StudentIdParam"
     put:
       tags: [Students]
       summary: Modifier un étudiant ou réinitialiser son mot de passe (admin)
@@ -584,6 +584,12 @@ components:
       required: true
       schema:
         type: integer
+    StudentIdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
   responses:
     UnauthorizedError:
       description: Jeton JWT manquant, invalide ou expiré.
@@ -728,6 +734,9 @@ components:
         name:
           type: string
           example: Programmation Orienté Objet et API
+        description:
+          type: string
+          example: PROG2 va englober les maitrise des API et de l'enjeu de la programmation orientée objet à travers JAVA.
     CreateCourseRequest:
       type: object
       required: [code, name]
@@ -738,6 +747,9 @@ components:
         name:
           type: string
           example: Programmation Orienté Objet et API
+        description:
+          type: string
+          example: PROG2 va englober les maitrise des API et de l'enjeu de la programmation orientée objet à travers JAVA.
     Exam:
       type: object
       properties:
@@ -799,20 +811,20 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/Question"
-    Answer:
+    Choice:
       type: object
       allOf:
-        - $ref: "#/components/schemas/CreateAnswerRequest"
+        - $ref: "#/components/schemas/CreateChoiceRequest"
         - type: object
           properties:
             id:
               type: integer
               example: 2
-    CreateAnswerRequest:
+    CreateChoiceRequest:
       type: object
-      required: [content, isCorrect]
+      required: [label, isCorrect]
       properties:
-        content:
+        label:
           type: string
           example: "HTML signifie HyperText Markup Language"
         isCorrect:
@@ -828,9 +840,12 @@ components:
             id:
               type: integer
               example: 5
+            position:
+              type: integer
+              example: 0
     CreateQuestionRequest:
       type: object
-      required: [text, score, answers]
+      required: [text, score, choicesé]
       properties:
         text:
           type: string
@@ -840,20 +855,20 @@ components:
           type: integer
           minimum: 1
           example: 1
-        answers:
+        choices:
           type: array
           minItems: 2
           maxItems: 6
           description: Entre 2 et 6 choix, dont exactement un avec isCorrect=true.
           items:
-            $ref: "#/components/schemas/CreateAnswerRequest"
-    PublicAnswer:
+            $ref: "#/components/schemas/CreateChoiceRequest"
+    PublicChoice:
       type: object
       properties:
         id:
           type: integer
           example: 2
-        content:
+        label:
           type: string
           example: "HTML signifie HyperText Markup Language"
     PublicQuestion:
@@ -868,10 +883,10 @@ components:
         score:
           type: integer
           example: 1
-        answers:
+        choices:
           type: array
           items:
-            $ref: "#/components/schemas/PublicAnswer"
+            $ref: "#/components/schemas/PublicChoice"
     PublicExam:
       type: object
       properties:
@@ -947,10 +962,10 @@ components:
         isCorrect:
           type: boolean
           example: true
-        answers:
+        choices:
           type: array
           items:
-            $ref: "#/components/schemas/PublicAnswer"
+            $ref: "#/components/schemas/PublicChoice"
     ExamResult:
       type: object
       description: Note calculée côté serveur et correction complète.
@@ -1001,7 +1016,7 @@ components:
       type: object
       properties:
         studentId:
-          type: integer
+          type: string
           example: 7
         studentName:
           type: string
