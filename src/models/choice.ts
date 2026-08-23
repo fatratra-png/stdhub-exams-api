@@ -5,7 +5,7 @@ export interface Choice {
   isCorrect: boolean;
 }
 
-export interface PublicChoice {
+export interface PublicChoiceRow {
   id: number;
   label: string;
 }

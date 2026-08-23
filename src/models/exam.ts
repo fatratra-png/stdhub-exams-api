@@ -1,4 +1,4 @@
-import type { PublicQuestion, QuestionCorrection } from "./question.ts";
+import type { PublicQuestionRow, CorrectionRow } from "./question.ts";
 
 export interface Exam {
   id: number;
@@ -10,7 +10,7 @@ export interface Exam {
   createdAt: Date;
 }
 
-export interface PublicExam {
+export interface PublicExamRow {
   id: number;
   courseId: number;
   courseName: string;
@@ -20,8 +20,8 @@ export interface PublicExam {
   endDate: Date;
 }
 
-export interface PublicExamDetail extends PublicExam {
-  questions: PublicQuestion[];
+export interface PublicExamDetail extends PublicExamRow {
+  questions: PublicQuestionRow[];
 }
 
 export interface ExamResult {
@@ -30,7 +30,7 @@ export interface ExamResult {
   score: number;
   maxScore: number;
   submittedAt: Date;
-  corrections: QuestionCorrection[];
+  corrections: CorrectionRow[];
 }
 
 export interface ExamResultRow {
@@ -94,4 +94,13 @@ export interface ExamResultsSummary {
   average: number;
   attemptsCount: number;
   results: ExamResultRow[];
+}
+
+export interface AttemtpHistoryRow {
+  examId: number;
+  examTitle: string;
+  courseName: string;
+  score: number;
+  submittedAt: Date;
+  maxScore: number;
 }
