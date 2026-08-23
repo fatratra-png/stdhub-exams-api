@@ -4,7 +4,10 @@ import { QuestionRepository } from "../repositories/questionRepository.ts";
 import { HttpError } from "../errors.ts";
 
 export class QuestionService {
-    constructor(private questionRepository: QuestionRepository) {}
+    private questionRepository: QuestionRepository;
+    constructor(questionRepository: QuestionRepository) {
+        this.questionRepository = questionRepository;
+    }
     
     private parsePayload(body: unknown): QuestionInput {
         const {text, score, choices} = (body ?? {}) as Record<string, unknown>;

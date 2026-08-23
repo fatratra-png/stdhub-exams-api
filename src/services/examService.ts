@@ -3,7 +3,10 @@ import { ExamRepository } from "../repositories/examRepository.ts";
 import { HttpError } from "../errors.ts";
 
 export class ExamService {
-    constructor(private examRepository: ExamRepository) {}
+    private examRepository: ExamRepository;
+    constructor(examRepository: ExamRepository) {
+        this.examRepository = examRepository;
+    }
 
     private parsePayload(body: unknown): ExamInput {
         const { courseId, title, description, startDate, endDate } = (body ?? {}) as Record<string, unknown>;

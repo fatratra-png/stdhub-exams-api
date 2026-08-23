@@ -7,7 +7,10 @@ const isUniqueViolation = (error: unknown): boolean =>
     typeof error === "object" && error !== null && (error as {code?: string}).code === "23505";
 
 export class StudentExamService {
-    constructor(private studentRepository: StudentExamRepository) {}
+    private studentExamRepository: StudentExamRepository;
+    constructor(studentExamRepository: StudentExamRepository) {
+        this.studentExamRepository = studentExamRepository;
+    }
 
     private assertInWindow(exam: PublicExamRow): void {
         const now = new Date();
@@ -38,25 +41,25 @@ export class StudentExamService {
     }
 
     async listAvailable(studentId: string): Promise<PublicExamRow[]> {
-        return this.studentRepository.findAvailableExams(studentId);
+        return this.studentExamRepository.findAvailableExams(studentId);
     }
     
     async getDetail(examId: number, studentId: string): Promise<PublicExamDetail> {
         if (!Number.isInteger(examId)) {
             throw new HttpError(404, "Ressource introuvable");
         }
-        const exam = await this.studentRepository.findExamById(examId);
+        const exam = await this.studentExamRepository.findExamById(examId);
         if (!exam) {
             throw new HttpError(404, "Ressource introuvable");
         }
         this.assertInWindow(exam);
     
-        const alreadyAttempted = await this.studentRepository.hasSubmittedAttempt(examId, studentId);
+        const alreadyAttempted = await this.studentExamRepository.hasSubmittedAttempt(examId, studentId);
         if (alreadyAttempted) {
             throw new HttpError(403, "Vous avez déjà passé cet examen");
         }
     
-        const questions = await this.studentRepository.findPublicQuestions(examId);
+        const questions = await this.studentExamRepository.findPublicQuestions(examId);
         return { ...exam, questions };
     }
 
@@ -65,21 +68,21 @@ export class StudentExamService {
             throw new HttpError(404, "Ressource introuvable");
         }
         const submitted = this.parseSubmission(body);
-        const client = await this.studentRepository.beginTransaction();
+        const client = await this.studentExamRepository.beginTransaction();
         try {
-            const exam = await this.studentRepository.findExamById(examId, client);
+            const exam = await this.studentExamRepository.findExamById(examId, client);
             if (!exam) {
                 throw new HttpError(404, "Ressource introuvable");
             }
             this.assertInWindow(exam);
     
-            const alreadyAttempted = await this.studentRepository.hasSubmittedAttempt(examId, studentId, client);
+            const alreadyAttempted = await this.studentExamRepository.hasSubmittedAttempt(examId, studentId, client);
             if (alreadyAttempted) {
                 throw new HttpError(409, "L'étudiant a déjà passé cet examen");
             }
     
-            const questions = await this.studentRepository.findGradingQuestions(examId, client);
-            const choices = await this.studentRepository.findGradingChoices(examId, client);
+            const questions = await this.studentExamRepository.findGradingQuestions(examId, client);
+            const choices = await this.studentExamRepository.findGradingChoices(examId, client);
             const choiceById = new Map(choices.map((choice) => [choice.id, choice]));
     
             let score = 0;
@@ -95,7 +98,7 @@ export class StudentExamService {
     
             let attempt: { id: number; submittedAt: Date };
             try {
-                attempt = await this.studentRepository.createAttempt(studentId, examId, score, client);
+                attempt = await this.studentExamRepository.createAttempt(studentId, examId, score, client);
             } catch (error) {
                 if (isUniqueViolation(error)) {
                     throw new HttpError(409, "L'étudiant a déjà passé cet examen");
@@ -103,10 +106,10 @@ export class StudentExamService {
                 throw error;
             }
         
-            await this.studentRepository.insertAnswers(attempt.id, submitted, client);
+            await this.studentExamRepository.insertAnswers(attempt.id, submitted, client);
         
-            const correctionRows = await this.studentRepository.findCorrections(attempt.id, examId, client);
-            await this.studentRepository.commit(client);
+            const correctionRows = await this.studentExamRepository.findCorrections(attempt.id, examId, client);
+            await this.studentExamRepository.commit(client);
         
             const maxScore = questions.reduce((total, question) => total + question.score, 0);
             const corrections = correctionRows.map((row) => ({
@@ -126,12 +129,12 @@ export class StudentExamService {
                 corrections,
             };
         } catch (error) {
-            await this.studentRepository.rollback(client);
+            await this.studentExamRepository.rollback(client);
             throw error;
         }
     }
 
     async getMyResults(studentId: string): Promise<AttemptHistoryRow[]> {
-        return this.studentRepository.findMyResults(studentId);
+        return this.studentExamRepository.findMyResults(studentId);
     }
 }

@@ -3,7 +3,11 @@ import { JwtSecurity } from "../security/jwtSecurity.ts";
 import { PasswordSecurity } from "../security/passwordSecurity.ts";
 
 export class AuthService {
-    constructor(private authRepository: AuthRepository) {}
+    private authRepository: AuthRepository;
+    constructor(authRepository: AuthRepository) {
+        this.authRepository = authRepository;
+    }
+
     async login(email: string, passwordPlain: string) {
         const user = await this.authRepository.getUserAccount(email);
         if (!user) throw new Error('Email ou mot de passe incorrect');

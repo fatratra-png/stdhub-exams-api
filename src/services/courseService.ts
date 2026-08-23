@@ -3,7 +3,10 @@ import { HttpError } from "../errors.ts";
 import type { CourseRow, CoursePayload } from "../models/course.ts";
 
 export class CourseService {
-    constructor(private courseRepository: CourseRepository) {}
+    private courseRepository: CourseRepository;
+    constructor(courseRepository: CourseRepository) {
+        this.courseRepository = courseRepository;
+    }
 
     private parsePayload(body: unknown): CoursePayload {
         const { code, name, description } = (body ?? {}) as Record<string, unknown>;

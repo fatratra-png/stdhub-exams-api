@@ -20,7 +20,10 @@ interface UpdatePayload {
 }
 
 export class StudentService {
-    constructor(private studentRepository: StudentRepository) {}
+    private studentRepository: StudentRepository;
+    constructor(studentRepository: StudentRepository) {
+        this.studentRepository = studentRepository;
+    }
  
     private parseCreatePayload(body: unknown): CreatePayload {
         const { firstName, lastName, email, password } = (body ?? {}) as Record<string, unknown>;
