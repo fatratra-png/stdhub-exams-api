@@ -19,6 +19,29 @@ export interface Student {
 
 export type PublicStudent = Omit<Student, "passwordHash">;
 
+export interface RawStudentRow {
+  id: string;
+  first_name: string;
+  last_name: string | null;
+  email: string;
+  is_active: boolean;
+  created_at: Date;
+}
+
+export interface CreateStudentRow {
+  firstName: string;
+  lastName: string | null;
+  email: string;
+  passwordHash: string;
+}
+
+export interface UpdateStudentRow {
+  firstName: string;
+  lastName: string | null;
+  email: string;
+  passwordHash?: string | undefined;
+}
+
 export interface AuthUser {
     id: string;
     role: Role;
