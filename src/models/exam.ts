@@ -73,7 +73,7 @@ export interface RawExamRow {
 
 export interface ExamDetailChoiceRow {
   id: number;
-  content: string;
+  label: string;
   isCorrect: boolean;
 }
 

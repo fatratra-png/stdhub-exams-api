@@ -42,7 +42,7 @@ export class ExamRepository {
         const result = await pool.query<ExamDetailQuestionRow>(
             `SELECT q.id, q.statement AS "text", q.points AS score,
                     (SELECT COALESCE(
-                                json_agg(json_build_object('id', c.id, 'content', c.label, 'isCorrect', c.is_correct)
+                                json_agg(json_build_object('id', c.id, 'label', c.label, 'isCorrect', c.is_correct)
                                         ORDER BY c.id),
                                 '[]'::json)
                     FROM choices c WHERE c.question_id = q.id) AS answers
