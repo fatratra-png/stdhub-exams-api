@@ -30,7 +30,15 @@ export interface ExamResult {
   score: number;
   maxScore: number;
   submittedAt: Date;
-  corrections: CorrectionRow[];
+  corrections: Array<{
+    questionId: number;
+    text: string;
+    score: number;
+    selectedChoiceId: number | null;
+    correctChoiceId: number | null;
+    choices: Array<{ id: number; label: string }>;
+    isCorrect: boolean;
+  }>;
 }
 
 export interface ExamResultRow {
@@ -96,7 +104,7 @@ export interface ExamResultsSummary {
   results: ExamResultRow[];
 }
 
-export interface AttemtpHistoryRow {
+export interface AttemptHistoryRow {
   examId: number;
   examTitle: string;
   courseName: string;

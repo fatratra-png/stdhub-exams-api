@@ -4,7 +4,7 @@ import { type AuthUser } from "../models/user.ts";
 import { JwtSecurity } from "../security/jwtSecurity.ts";
 
 declare module "express-serve-static-core" {
-  interface Request {
+  export interface Request {
     user?: AuthUser;
   }
 }
