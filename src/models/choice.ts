@@ -12,7 +12,7 @@ export interface PublicChoiceRow {
 
 export interface ChoiceRow {
   id: number;
-  content: string;
+  label: string;
   isCorrect: boolean;
 }
 
