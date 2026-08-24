@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import type { NextFunction, Request, Response } from "express";
 import { HttpError } from "./errors/errors.ts";
 import { authRouter } from "./routes/authRoute.ts";
@@ -17,6 +18,7 @@ if (!CLIENT_URL) {
   throw new Error("CLIENT_URL is missing");
 }
 
+app.use(helmet());
 app.use(
   cors({
     origin: CLIENT_URL,
