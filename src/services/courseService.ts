@@ -1,5 +1,5 @@
 import type { CourseRepository } from "../repositories/courseRepository.ts";
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 import type { CourseRow, CoursePayload } from "../models/course.ts";
 
 export class CourseService {

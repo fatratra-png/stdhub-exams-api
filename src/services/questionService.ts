@@ -1,7 +1,7 @@
 import type { QuestionWithChoicesRow, QuestionInput } from "../models/question.ts";
 import type { ChoiceInput } from "../models/choice.ts";
 import { QuestionRepository } from "../repositories/questionRepository.ts";
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 
 export class QuestionService {
     private questionRepository: QuestionRepository;

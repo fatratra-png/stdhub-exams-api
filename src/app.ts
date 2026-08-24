@@ -1,6 +1,6 @@
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
-import { HttpError } from "./errors.ts";
+import { HttpError } from "./errors/errors.ts";
 import { authRouter } from "./routes/authRoute.ts";
 import { studentsRouter } from "./routes/studentRoute.ts";
 import { coursesRouter } from "./routes/courseRoute.ts";
