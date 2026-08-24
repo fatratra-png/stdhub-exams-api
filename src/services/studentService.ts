@@ -1,6 +1,6 @@
 import type { CreateStudentRow, UpdateStudentRow, PublicStudent } from "../models/user.ts";
 import { StudentRepository } from "../repositories/studentRepository.ts";
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 import { PasswordSecurity } from "../security/passwordSecurity.ts";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@mail\.hei\.school$/;

@@ -1,6 +1,6 @@
 import type {ExamRow, ExamInput, ExamDetail, ExamResultsSummary} from "../models/exam.ts";
 import { ExamRepository } from "../repositories/examRepository.ts";
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 
 export class ExamService {
     private examRepository: ExamRepository;

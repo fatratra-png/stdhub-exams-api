@@ -1,4 +1,4 @@
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 import type { PublicExamRow, AttemptHistoryRow, PublicExamDetail, ExamResult } from "../models/exam.ts";
 import { StudentExamRepository } from "../repositories/studentExamRepository.ts";
 import type { SubmittedAnswer } from "../models/choice.ts";
