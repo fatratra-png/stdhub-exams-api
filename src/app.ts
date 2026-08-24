@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import type { NextFunction, Request, Response } from "express";
@@ -10,6 +11,17 @@ import { questionsRouter } from "./routes/questionRoute.ts";
 import { myRouter } from "./routes/studentExamRoute.ts";
 
 const app = express();
+
+const CLIENT_URL = process.env.CLIENT_URL;
+if (!CLIENT_URL) {
+  throw new Error("CLIENT_URL is missing");
+}
+
+app.use(
+  cors({
+    origin: CLIENT_URL,
+  }),
+);
 
 app.use(express.json());
 
