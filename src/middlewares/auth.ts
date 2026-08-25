@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { HttpError } from "../errors.ts";
+import { HttpError } from "../errors/errors.ts";
 import { type AuthUser } from "../models/user.ts";
 import { JwtSecurity } from "../security/jwtSecurity.ts";
 

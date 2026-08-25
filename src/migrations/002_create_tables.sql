@@ -1,7 +1,7 @@
 CREATE SEQUENCE IF NOT EXISTS admin_id_seq START WITH 1;
 
 CREATE TABLE IF NOT EXISTS admins(
-      id VARCHAR(20) PRIMARY KEY DEFAULT 'ADM' || LPAD(nextval('admin_id_seq')::text, 5, '0'),
+      id VARCHAR(20) PRIMARY KEY DEFAULT 'ADMIN' || LPAD(nextval('admin_id_seq')::text, 3, '0'),
       email VARCHAR(100) UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
