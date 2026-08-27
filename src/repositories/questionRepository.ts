@@ -87,7 +87,7 @@ export class QuestionRepository {
 
     async createQuestion(examId: number, text: string, score: number, position: number, client: Queryable,): Promise<QuestionRow> {
         const result = await client.query<{id: number; score: number}>(
-            `INSERT INTO questions(exam_id, statemtent, points, position)
+            `INSERT INTO questions(exam_id, statement, points, position)
             VALUES ($1, $2, $3, $4) RETURNING id, points AS score
             `, [examId, text, score, position],
         );
