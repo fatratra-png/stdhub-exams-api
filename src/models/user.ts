@@ -9,8 +9,8 @@ export interface Admin {
 
 export interface Student {
   id: string;
-  firstName: string;
-  lastName: string | null;
+  firstName?: string | undefined;
+  name: string;
   email: string;
   passwordHash: string;
   isActive: boolean;
@@ -21,8 +21,8 @@ export type PublicStudent = Omit<Student, "passwordHash">;
 
 export interface RawStudentRow {
   id: string;
-  first_name: string;
-  last_name: string | null;
+  first_name: string | null;
+  name: string;
   email: string;
   is_active: boolean;
   created_at: Date;
