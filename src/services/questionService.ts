@@ -64,7 +64,7 @@ export class QuestionService {
                 throw new HttpError(404, "Ressource introuvable");
             }
             const hasAttempts = await this.questionRepository.hasAttempt(examId, client);
-            if (!hasAttempts) {
+            if (hasAttempts) {
                 throw new HttpError(409, "Ajout refusé : l'examen a déjà au moins tentative");
             }
             const position = await this.questionRepository.nextPosition(examId, client);
