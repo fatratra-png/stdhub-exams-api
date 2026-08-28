@@ -29,15 +29,15 @@ export interface RawStudentRow {
 }
 
 export interface CreateStudentRow {
-  firstName: string;
-  lastName: string | null;
+  firstName: string | null;
+  name: string;
   email: string;
   passwordHash: string;
 }
 
 export interface UpdateStudentRow {
-  firstName: string;
-  lastName: string | null;
+  firstName: string | null;
+  name: string;
   email: string;
   passwordHash?: string | undefined;
 }

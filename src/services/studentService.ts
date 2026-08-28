@@ -6,15 +6,15 @@ import { PasswordSecurity } from "../security/passwordSecurity.ts";
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@mail\.hei\.school$/;
 
 interface CreatePayload {
-  firstName: string;
-  lastName: string | null;
+  firstName: string | null;
+  name: string;
   email: string;
   password: string;
 }
- 
+
 interface UpdatePayload {
-  firstName?: string;
-  lastName?: string | null;
+  firstName?: string | null;
+  name?: string;
   email?: string;
   password?: string;
 }
@@ -24,12 +24,12 @@ export class StudentService {
     constructor(studentRepository: StudentRepository) {
         this.studentRepository = studentRepository;
     }
- 
+
     private parseCreatePayload(body: unknown): CreatePayload {
-        const { firstName, lastName, email, password } = (body ?? {}) as Record<string, unknown>;
-    
-        if (typeof firstName !== "string" || firstName.trim().length === 0) {
-            throw new DomainError("Champ requis manquant : firstName");
+        const { firstName, name, email, password } = (body ?? {}) as Record<string, unknown>;
+
+        if (typeof name !== "string" || name.trim().length === 0) {
+            throw new DomainError("Champ requis manquant : name");
         }
         if (typeof email !== "string") {
             throw new DomainError("Champ requis manquant : email");
@@ -40,32 +40,33 @@ export class StudentService {
         if (typeof password !== "string" || password.length < 8) {
             throw new DomainError("Le mot de passe doit contenir au moins 8 caractères");
         }
-        if (lastName !== undefined && lastName !== null && typeof lastName !== "string") {
-            throw new DomainError("Champ invalide : lastName");
+        if (firstName !== undefined && firstName !== null && typeof firstName !== "string") {
+            throw new DomainError("Champ invalide : firstName");
         }
-    
+
         return {
-            firstName: firstName.trim(),
-            lastName: typeof lastName === "string" && lastName.trim().length > 0 ? lastName.trim() : null,
+            firstName: typeof firstName === "string" && firstName.trim().length > 0 ? firstName.trim() : null,
+            name: name.trim(),
             email: email.toLowerCase(),
             password,
         };
     }
+
     private parseUpdatePayload(body: unknown): UpdatePayload {
-        const { firstName, lastName, email, password } = (body ?? {}) as Record<string, unknown>;
+        const { firstName, name, email, password } = (body ?? {}) as Record<string, unknown>;
         const result: UpdatePayload = {};
-    
+
         if (firstName !== undefined) {
-            if (typeof firstName !== "string" || firstName.trim().length === 0) {
+            if (firstName !== null && typeof firstName !== "string") {
                 throw new DomainError("Champ invalide : firstName");
             }
-            result.firstName = firstName.trim();
+            result.firstName = typeof firstName === "string" ? firstName.trim() || null : null;
         }
-        if (lastName !== undefined) {
-            if (lastName !== null && typeof lastName !== "string") {
-                throw new DomainError("Champ invalide : lastName");
+        if (name !== undefined) {
+            if (typeof name !== "string" || name.trim().length === 0) {
+                throw new DomainError("Champ invalide : name");
             }
-            result.lastName = typeof lastName === "string" ? lastName.trim() || null : null;
+            result.name = name.trim();
         }
         if (email !== undefined) {
             if (typeof email !== "string" || !EMAIL_REGEX.test(email)) {
@@ -81,29 +82,29 @@ export class StudentService {
         }
         return result;
     }
-    
+
     async list(): Promise<PublicStudent[]> {
         return this.studentRepository.findAll();
     }
- 
+
     async create(body: unknown): Promise<PublicStudent> {
         const payload = this.parseCreatePayload(body);
-    
+
         const existingOwnerId = await this.studentRepository.findEmailOwnerId(payload.email);
         if (existingOwnerId !== null) {
             throw new DomainError("Un compte avec cet email existe déjà");
         }
-    
+
         const passwordHash = await PasswordSecurity.hash(payload.password);
         const input: CreateStudentRow = {
             firstName: payload.firstName,
-            lastName: payload.lastName,
+            name: payload.name,
             email: payload.email,
             passwordHash,
         };
         return this.studentRepository.create(input);
     }
- 
+
     async update(id: string, body: unknown): Promise<PublicStudent> {
         const current = await this.studentRepository.findById(id);
         if (!current) {
@@ -118,8 +119,8 @@ export class StudentService {
         }
         const passwordHash = payload.password !== undefined ? await PasswordSecurity.hash(payload.password) : undefined;
         const input: UpdateStudentRow = {
-            firstName: payload.firstName ?? current.firstName,
-            lastName: payload.lastName !== undefined ? payload.lastName : current.lastName,
+            firstName: payload.firstName !== undefined ? payload.firstName : (current.firstName ?? null),
+            name: payload.name ?? current.name,
             email: payload.email ?? current.email,
             passwordHash,
         };
@@ -129,7 +130,7 @@ export class StudentService {
         }
         return updated;
     }
-    
+
     async deactivate(id: string): Promise<PublicStudent> {
         const updated = await this.studentRepository.deactivate(id);
         if (!updated) {

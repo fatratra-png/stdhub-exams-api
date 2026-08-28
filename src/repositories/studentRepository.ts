@@ -38,7 +38,7 @@ export class StudentRepository {
             `INSERT INTO students(first_name, name, email, password_hash)
             VALUES ($1, $2, $3, $4)
             RETURNING ${STUDENT_COLUMNS}`,
-            [input.firstName, input.lastName, input.email, input.passwordHash],
+            [input.firstName, input.name, input.email, input.passwordHash],
         );
         return toStudent(result.rows[0] as RawStudentRow);
     }
@@ -52,7 +52,7 @@ export class StudentRepository {
                 password_hash = COALESCE($4, password_hash)
                 WHERE id = $5
             RETURNING ${STUDENT_COLUMNS}`,
-            [input.firstName, input.lastName, input.email, input.passwordHash ?? null, id],
+            [input.firstName, input.name, input.email, input.passwordHash ?? null, id],
         );
         const row = result.rows[0];
         return row ? toStudent(row) : null;
