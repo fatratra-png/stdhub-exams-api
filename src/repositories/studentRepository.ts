@@ -1,12 +1,12 @@
 import { pool } from "../config/db.ts";
 import type { PublicStudent, RawStudentRow, CreateStudentRow, UpdateStudentRow } from "../models/user.ts";
 
-const STUDENT_COLUMNS = "id, first_name, last_name, email, is_active, created_at";
- 
+const STUDENT_COLUMNS = "id, first_name, name, email, is_active, created_at";
+
 const toStudent = (row: RawStudentRow): PublicStudent => ({
   id: row.id,
-  firstName: row.first_name,
-  lastName: row.last_name,
+  firstName: row.first_name ?? undefined,
+  name: row.name,
   email: row.email,
   isActive: row.is_active,
   createdAt: row.created_at,
@@ -35,7 +35,7 @@ export class StudentRepository {
 
     async create(input: CreateStudentRow): Promise<PublicStudent> {
         const result = await pool.query<RawStudentRow>(
-            `INSERT INTO students(first_name, last_name, email, password_hash)
+            `INSERT INTO students(first_name, name, email, password_hash)
             VALUES ($1, $2, $3, $4)
             RETURNING ${STUDENT_COLUMNS}`,
             [input.firstName, input.lastName, input.email, input.passwordHash],
@@ -47,7 +47,7 @@ export class StudentRepository {
         const result = await pool.query<RawStudentRow>(
             `UPDATE students SET
                 first_name = $1,
-                last_name = $2,
+                name = $2,
                 email = $3,
                 password_hash = COALESCE($4, password_hash)
                 WHERE id = $5
@@ -66,4 +66,4 @@ export class StudentRepository {
         const row = result.rows[0];
         return row ? toStudent(row) : null;
     }
-} 
+}
