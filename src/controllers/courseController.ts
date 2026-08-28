@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { CourseRepository } from "../repositories/courseRepository.ts";
 import { CourseService } from "../services/courseService.ts";
+import { handleControllerError } from "./controllerError.ts";
 
 const courseRepository = new CourseRepository();
 const courseService = new CourseService(courseRepository);
@@ -11,7 +12,7 @@ export class CourseController {
             const courses = await courseService.list();
             res.status(200).json(courses);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -20,7 +21,7 @@ export class CourseController {
             const course = await courseService.create(req.body);
             res.status(201).json(course);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -30,7 +31,7 @@ export class CourseController {
             const course = await courseService.update(id, req.body);
             res.status(200).json(course);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -40,7 +41,7 @@ export class CourseController {
             await courseService.remove(id);
             res.status(204).send();
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 }

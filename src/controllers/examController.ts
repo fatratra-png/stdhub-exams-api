@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { ExamRepository } from "../repositories/examRepository.ts";
 import { ExamService } from "../services/examService.ts";
+import { handleControllerError } from "./controllerError.ts";
 
 const examRepository = new ExamRepository();
 const examService = new ExamService(examRepository);
@@ -11,7 +12,7 @@ export class ExamController {
             const exams = await examService.list(req.query.courseId);
             res.status(200).json(exams);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -20,7 +21,7 @@ export class ExamController {
             const exam = await examService.create(req.body);
             res.status(201).json(exam);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -30,7 +31,7 @@ export class ExamController {
             const exam = await examService.getDetail(id);
             res.status(200).json(exam);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -40,7 +41,7 @@ export class ExamController {
             const exam = await examService.update(id, req.body);
             res.status(200).json(exam);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -50,7 +51,7 @@ export class ExamController {
             await examService.remove(id);
             res.status(204).send();
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 
@@ -60,7 +61,7 @@ export class ExamController {
             const summary = await examService.getResults(id);
             res.status(200).json(summary);
         } catch (error) {
-            next(error);
+            handleControllerError(error, next);
         }
     }
 }
