@@ -11,8 +11,8 @@ CREATE SEQUENCE IF NOT EXISTS student_id_seq START WITH 26001;
 
 CREATE TABLE IF NOT EXISTS students(
       id VARCHAR(20) PRIMARY KEY DEFAULT 'STD' || nextval('student_id_seq'),
-      first_name VARCHAR(100) NOT NULL,
-      last_name VARCHAR(100),
+      first_name VARCHAR(100),
+      name VARCHAR(100) NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       is_active BOOLEAN NOT NULL DEFAULT TRUE,

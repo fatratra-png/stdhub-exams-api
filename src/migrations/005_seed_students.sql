@@ -1,5 +1,5 @@
 -- Mot de passe par defaut : Password123
-INSERT INTO students(first_name, last_name, email, password_hash) VALUES
+INSERT INTO students(name, first_name, email, password_hash) VALUES
 
 ('Andrianjafy',      NULL, 'andrianjafy@mail.hei.school',      '$2b$10$RmZPegRqu.PLzU1E9wdAs.chtAaSnqx.7OloxamDnl5tSl24ySCZG'),
 ('Razafindrakoto',   NULL, 'razafindrakoto@mail.hei.school',   '$2b$10$RmZPegRqu.PLzU1E9wdAs.chtAaSnqx.7OloxamDnl5tSl24ySCZG'),
