@@ -2,7 +2,7 @@
 
 > **Status: MVP** — this is a minimal viable product built for a school web course (HEI, WEB2). It covers the core QCM workflow end-to-end but is intentionally small, with several production concerns left out (see [MVP scope](#mvp-scope--known-limitations)).
 
-Backend REST API for **Exam Hub**, a multiple-choice-question (QCM) exam management platform. The API handles two distinct worlds:
+Backend REST API for **HEI STDHub**, a multiple-choice-question (QCM) exam management platform. The API handles two distinct worlds:
 
 - **Admin side** — manage students, courses, exams and their QCM questions, and consult exam results/statistics.
 - **Student side** — browse available exams, take them a single time, and get an instantly auto-corrected score with a full correction.
