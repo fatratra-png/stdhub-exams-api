@@ -109,7 +109,7 @@ export class ExamRepository {
     async getResultRows(examId: number): Promise<ExamResultRow[]> {
         const result = await pool.query<ExamResultRow>(
             `SELECT a.student_id AS "studentId",
-                    TRIM(s.first_name || ' ' || COALESCE(s.last_name, '')) AS "studentName",
+                    TRIM(s.first_name || ' ' || COALESCE(s.name, '')) AS "studentName",
                     COALESCE(a.score, 0) AS score,
                     COALESCE((SELECT SUM(points) FROM questions WHERE exam_id = a.exam_id), 0) AS "maxScore",
                     a.submitted_at AS "submittedAt"

@@ -1,6 +1,6 @@
 import type { CreateStudentRow, UpdateStudentRow, PublicStudent } from "../models/user.ts";
 import { StudentRepository } from "../repositories/studentRepository.ts";
-import { HttpError } from "../errors/errors.ts";
+import { DomainError } from "../errors/errors.ts";
 import { PasswordSecurity } from "../security/passwordSecurity.ts";
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@mail\.hei\.school$/;
@@ -29,19 +29,19 @@ export class StudentService {
         const { firstName, lastName, email, password } = (body ?? {}) as Record<string, unknown>;
     
         if (typeof firstName !== "string" || firstName.trim().length === 0) {
-            throw new HttpError(400, "Champ requis manquant : firstName");
+            throw new DomainError("Champ requis manquant : firstName");
         }
         if (typeof email !== "string") {
-            throw new HttpError(400, "Champ requis manquant : email");
+            throw new DomainError("Champ requis manquant : email");
         }
         if (!EMAIL_REGEX.test(email)) {
-            throw new HttpError(400, "Adresse email invalide");
+            throw new DomainError("Adresse email invalide");
         }
         if (typeof password !== "string" || password.length < 8) {
-            throw new HttpError(400, "Le mot de passe doit contenir au moins 8 caractères");
+            throw new DomainError("Le mot de passe doit contenir au moins 8 caractères");
         }
         if (lastName !== undefined && lastName !== null && typeof lastName !== "string") {
-            throw new HttpError(400, "Champ invalide : lastName");
+            throw new DomainError("Champ invalide : lastName");
         }
     
         return {
@@ -57,25 +57,25 @@ export class StudentService {
     
         if (firstName !== undefined) {
             if (typeof firstName !== "string" || firstName.trim().length === 0) {
-                throw new HttpError(400, "Champ invalide : firstName");
+                throw new DomainError("Champ invalide : firstName");
             }
             result.firstName = firstName.trim();
         }
         if (lastName !== undefined) {
             if (lastName !== null && typeof lastName !== "string") {
-                throw new HttpError(400, "Champ invalide : lastName");
+                throw new DomainError("Champ invalide : lastName");
             }
             result.lastName = typeof lastName === "string" ? lastName.trim() || null : null;
         }
         if (email !== undefined) {
             if (typeof email !== "string" || !EMAIL_REGEX.test(email)) {
-                throw new HttpError(400, "Adresse email invalide");
+                throw new DomainError("Adresse email invalide");
             }
             result.email = email.toLowerCase();
         }
         if (password !== undefined) {
             if (typeof password !== "string" || password.length < 8) {
-                throw new HttpError(400, "Le mot de passe doit contenir au moins 8 caractères");
+                throw new DomainError("Le mot de passe doit contenir au moins 8 caractères");
             }
             result.password = password;
         }
@@ -91,7 +91,7 @@ export class StudentService {
     
         const existingOwnerId = await this.studentRepository.findEmailOwnerId(payload.email);
         if (existingOwnerId !== null) {
-            throw new HttpError(409, "Un compte avec cet email existe déjà");
+            throw new DomainError("Un compte avec cet email existe déjà");
         }
     
         const passwordHash = await PasswordSecurity.hash(payload.password);
@@ -107,13 +107,13 @@ export class StudentService {
     async update(id: string, body: unknown): Promise<PublicStudent> {
         const current = await this.studentRepository.findById(id);
         if (!current) {
-            throw new HttpError(404, "Ressource introuvable");
+            throw new DomainError("Ressource introuvable");
         }
         const payload = this.parseUpdatePayload(body);
         if (payload.email !== undefined) {
             const ownerId = await this.studentRepository.findEmailOwnerId(payload.email, id);
             if (ownerId !== null) {
-                throw new HttpError(409, "Un compte avec cet email existe déjà");
+                throw new DomainError("Un compte avec cet email existe déjà");
             }
         }
         const passwordHash = payload.password !== undefined ? await PasswordSecurity.hash(payload.password) : undefined;
@@ -125,7 +125,7 @@ export class StudentService {
         };
         const updated = await this.studentRepository.update(id, input);
         if (!updated) {
-            throw new HttpError(404, "Ressource introuvable");
+            throw new DomainError("Ressource introuvable");
         }
         return updated;
     }
@@ -133,7 +133,7 @@ export class StudentService {
     async deactivate(id: string): Promise<PublicStudent> {
         const updated = await this.studentRepository.deactivate(id);
         if (!updated) {
-            throw new HttpError(404, "Ressource introuvable");
+            throw new DomainError("Ressource introuvable");
         }
         return updated;
     }
