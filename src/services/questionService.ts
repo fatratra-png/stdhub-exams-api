@@ -64,7 +64,7 @@ export class QuestionService {
                 throw new DomainError("Ressource introuvable");
             }
             const hasAttempts = await this.questionRepository.hasAttempt(examId, client);
-            if (!hasAttempts) {
+            if (hasAttempts) {
                 throw new DomainError("Ajout refusé : l'examen a déjà au moins tentative");
             }
             const position = await this.questionRepository.nextPosition(examId, client);
